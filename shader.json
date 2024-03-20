@@ -1,0 +1,16 @@
+{
+    "nodes" :
+    {
+        "input assembler" : { "out" : [ "xyz" ] },
+        "camera"          : { "out" : [ "view", "projection" ] },
+        "transform"       : { "out" : [ "model" ] },
+        "shader"          : { "in"  : [ "xyz", "view", "projection", "model" ] }
+    },
+    "connections" : 
+    [
+        [ "input assembler:xyz" , "shader:xyz" ],
+        [ "camera:view"         , "shader:view" ],
+        [ "camera:projection"   , "shader:projection" ],
+        [ "transform:model"     , "shader:model" ]
+    ]
+}

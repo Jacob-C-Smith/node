@@ -1,0 +1,44 @@
+{
+    "nodes" :
+    {
+        "geometry" :
+        {
+            "out" : [ "color" ],
+            "data" :
+            {
+                "description" : "Render holdout",
+                "in" : { "camera" : [ { "view" : "mat4" }, { "projection" : "mat4" } ] },
+                "shader" : 
+                {
+                    "holdout" : 
+                    {
+                        "nodes"   :
+                        {
+                            "input assembler" : { "out" : [ "xyz" ] },
+                            "camera"          : { "out" : [ "view", "projection" ] },
+                            "transform"       : { "out" : [ "model" ] },
+                            "shader"          : { "in"  : [ "xyz", "view", "projection", "model" ] }
+                        },
+                        "connections" : 
+                        [
+                            [ "input assembler:xyz" , "shader:xyz" ],
+                            [ "camera:view"         , "shader:view" ],
+                            [ "camera:projection"   , "shader:projection" ],
+                            [ "transform:model"     , "shader:model" ]
+                        ],
+                        "data" :
+                        {
+                            "vertex"   : "resources/shaders/holdout/vert.glsl",
+                            "fragment" : "resources/shaders/holdout/frag.glsl",
+                            "culling"  : [ "visible" ],
+                            "layout"   : [ { "xyz" : "vec3" } ],
+                            "in"       : { "transform" : [ { "model" : "mat4" } ] }
+                        }
+                    }
+                }
+            }
+        },
+        "color" : { "in" : [ "color" ] }
+    },
+    "connections" : [ ["geometry:color", "color:color"] ]
+}
