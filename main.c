@@ -36,16 +36,48 @@ int main ( int argc, const char *argv[] )
     json_value *p_value = (void *) 0;
     char _file[4096] = { 0 };
 
-    load_file("shader.json", &_file, false); 
+    // Load the file
+    if ( load_file("resources/deferred.json", &_file, false) == 0 ) goto failed_to_load_file;
 
-    json_value_parse(&_file, 0, &p_value);   
+    // Parse the json text 
+    if ( json_value_parse((char *)&_file, 0, &p_value) == 0 ) goto failed_to_parse_json;
 
-    node_graph_construct(&p_node_graph, p_value);
+    // Construct a node graph
+    if ( node_graph_construct(&p_node_graph, p_value) == 0 ) goto failed_to_construct_graph;
 
+    // Print the node graph to standard out
     node_graph_print(p_node_graph);
     
     // Success
     return EXIT_SUCCESS;
+
+    // Error handling
+    {
+
+        failed_to_load_file:
+            #ifndef NDEBUG
+                log_error("Error: Failed to load file!\n");
+            #endif
+
+            // Error
+            return 0;
+
+        failed_to_parse_json:
+            #ifndef NDEBUG
+                log_error("Error: Failed to parse json text!\n");
+            #endif
+
+            // Error
+            return 0;
+
+        failed_to_construct_graph:
+            #ifndef NDEBUG
+                log_error("Error: Failed to construct graph!\n");
+            #endif
+
+            // Error
+            return 0;
+    }
 }
 
 size_t load_file ( const char *path, void *buffer, bool binary_mode )
@@ -83,7 +115,7 @@ size_t load_file ( const char *path, void *buffer, bool binary_mode )
         {
             no_path:
                 #ifndef NDEBUG
-                    log_error("[json] Null path provided to function \"%s\n", __FUNCTION__);
+                    log_error("[node] Null path provided to function \"%s\n", __FUNCTION__);
                 #endif
 
                 // Error
@@ -94,7 +126,7 @@ size_t load_file ( const char *path, void *buffer, bool binary_mode )
         {
             invalid_file:
                 #ifndef NDEBUG
-                    printf("[Standard library] Failed to load file \"%s\". %s\n",path, strerror(errno));
+                    log_error("[Standard library] Failed to load file \"%s\". %s\n",path, strerror(errno));
                 #endif
 
                 // Error
