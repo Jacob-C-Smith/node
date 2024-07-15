@@ -428,8 +428,9 @@ int node_construct ( node **pp_node, const char *const p_name, const json_value 
 
         // Initialized data
         dict *p_dict = p_value->object;
-        json_value *p_out = dict_get(p_dict, "out"),
-                   *p_in  = dict_get(p_dict, "in");
+        json_value *p_out  = dict_get(p_dict, "out"),
+                   *p_in   = dict_get(p_dict, "in"),
+                   *p_data = dict_get(p_dict, "data");
         
         // Set the name
         {
@@ -482,6 +483,9 @@ int node_construct ( node **pp_node, const char *const p_name, const json_value 
                 strncpy(p_node->in[i]._name, i_value->string, 63);
             }
         }
+
+        // Store the node data
+        p_node->value = p_data;
     }
 
     // Return a pointer to the caller
