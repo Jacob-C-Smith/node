@@ -221,9 +221,6 @@ int node_graph_construct ( node_graph **pp_node_graph, const json_value *const p
             array *p_array = p_connections->list;
             size_t connection_quantity = array_size(p_array);
 
-            // Error check
-            if ( connection_quantity == 0 ) goto no_connections;
-
             // Construct each connection
             for (size_t i = 0; i < connection_quantity; i++)
             {
