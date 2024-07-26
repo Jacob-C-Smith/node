@@ -31,6 +31,10 @@ size_t load_file ( const char *path, void *buffer, bool binary_mode );
 int main ( int argc, const char *argv[] )
 {
 
+    // Unused
+    (void) argc;
+    (void) argv;
+
     // Initialized data
     node_graph *p_node_graph = (void *) 0;
     json_value *p_value = (void *) 0;
