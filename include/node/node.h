@@ -161,3 +161,7 @@ DLLEXPORT int node_graph_construct (
  * @return 1 on success, 0 on error
  */
 DLLEXPORT int node_graph_print ( const node_graph *const p_node_graph );
+
+DLLEXPORT size_t node_graph_sources_get ( node_graph *p_node_graph, node **pp_node_sources );
+
+DLLEXPORT size_t node_graph_drains_get ( node_graph *p_node_graph, node **pp_node_drains );

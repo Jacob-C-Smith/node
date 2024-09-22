@@ -551,6 +551,10 @@ int node_graph_print ( const node_graph *const p_node_graph )
     // Argument check
     if ( p_node_graph == (void *) 0 ) goto no_node_graph;
 
+    // Initialized data
+    node *_p_sources[64] = { 0 };
+    size_t sources_quantity = node_graph_sources_get(p_node_graph, &_p_sources);
+
     // Print the node graph
     printf("Node Graph:\n");
     printf(" - nodes: \n");
@@ -605,6 +609,18 @@ int node_graph_print ( const node_graph *const p_node_graph )
         no_inputs:;
     }
 
+    // Print the sources
+    printf(" - sources: \n");
+
+    // Print each node 
+    for (size_t i = 0; i < sources_quantity; i++)
+    {
+
+        // Print the name of the node
+        printf("      - \"%s\"\n", _p_sources[i]->_name);
+    
+    }
+
     // Success
     return 1;
 
@@ -623,3 +639,29 @@ int node_graph_print ( const node_graph *const p_node_graph )
         }
     }
 }
+
+size_t node_graph_sources_get ( node_graph *p_node_graph, node **pp_node_sources )
+{
+    
+    // Initialized data
+    size_t i = 0;
+  
+    // Iterate through the nodes
+    for (size_t j = 0; j < p_node_graph->node_quantity; j++)
+    {
+        
+        // Initialized data
+        node *p_node = p_node_graph->_p_nodes[j];
+
+        // Store the source node
+        if ( p_node->in_quantity == 0 ) 
+        {
+            if ( pp_node_sources == (void *) 0 ) i++;
+            else pp_node_sources[i++] = p_node;
+        }
+    }
+    
+    return i;
+}
+
+size_t node_graph_drains_get ( node_graph *p_node_graph, node **pp_node_sources );
