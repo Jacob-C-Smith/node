@@ -552,7 +552,7 @@ int node_graph_print ( const node_graph *const p_node_graph )
     if ( p_node_graph == (void *) 0 ) goto no_node_graph;
 
     // Print the node graph
-    printf("Node Graph:\n");
+    log_info("=== node graph @ %p ===\n", p_node_graph);
     printf(" - nodes: \n");
 
     // Print each node 
@@ -560,26 +560,33 @@ int node_graph_print ( const node_graph *const p_node_graph )
     {
 
         // Print the name of the node
-        printf("      - \"%s\":\n", p_node_graph->_p_nodes[i]->_name);
+        printf("      - %s:\n", p_node_graph->_p_nodes[i]->_name);
+        if ( p_node_graph->_p_nodes[i]->value )
+        {
+            printf("        - data: ");
+            json_value_print(p_node_graph->_p_nodes[i]->value);
+            putchar('\n');
+        }
         
         if ( p_node_graph->_p_nodes[i]->out_quantity == 0 ) goto no_outputs;
 
         // Print the outputs
-        printf("        - out:\n");
+        log_info("        - out:\n");
 
         // Iterate through each output
         for (size_t j = 0; j < p_node_graph->_p_nodes[i]->out_quantity; j++)
-
+        {
+            
+            log_info("           %s", p_node_graph->_p_nodes[i]->out[j]._name);
             // Print the output and input
-            printf(
-                "           \"%s\" : ( %s:%s --> %s:%s )\n",
-                p_node_graph->_p_nodes[i]->out[j]._name,
-                p_node_graph->_p_nodes[i]->_name,
-                p_node_graph->_p_nodes[i]->out[j]._name,
+            printf(" >>> ");
+            log_error("%s:%s\n",
+                //p_node_graph->_p_nodes[i]->_name,
+                //p_node_graph->_p_nodes[i]->out[j]._name//,
                 p_node_graph->_p_nodes[i]->out[j].p_out->_name,
                 p_node_graph->_p_nodes[i]->out[j].p_out->in[p_node_graph->_p_nodes[i]->out[j].in_index]._name
             );
-            
+        }   
         
         no_outputs:
 
@@ -587,21 +594,23 @@ int node_graph_print ( const node_graph *const p_node_graph )
         if ( p_node_graph->_p_nodes[i]->in_quantity == 0 ) goto no_inputs;
 
         // Print the inputs
-        printf("        - in:\n");
+        log_error("        - in:\n");
 
         // Iterate through each node
         for (size_t j = 0; j < p_node_graph->_p_nodes[i]->in_quantity; j++)
+        {
 
             // Print the input and output
-            printf(
-                "           \"%s\" : ( %s:%s --> %s:%s )\n",
-                p_node_graph->_p_nodes[i]->in[j]._name,
+            log_error("           %s", p_node_graph->_p_nodes[i]->in[j]._name);
+
+            printf(" <<< ");
+            log_info("%s:%s\n",
                 p_node_graph->_p_nodes[i]->in[j].p_in->_name,
                 p_node_graph->_p_nodes[i]->in[j].p_in->out[p_node_graph->_p_nodes[i]->in[j].out_index]._name,
                 p_node_graph->_p_nodes[i]->_name,
                 p_node_graph->_p_nodes[i]->in[j]._name
             );
-
+        }
         no_inputs:;
     }
 
